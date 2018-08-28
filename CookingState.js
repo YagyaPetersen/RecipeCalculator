@@ -1,6 +1,8 @@
 class State {
     initialize(screen) {
         this.currentScreen = screen;
+        this.ingredientsList = [];
+        
     }
 
     setCurrentScreen(screen) {
@@ -8,6 +10,12 @@ class State {
     }
     getCurrentScreen() {
         return this.currentScreen;
+    }
+    addIngredients(recipes){
+        this.ingredientsList.push(recipes);
+    }
+    getIngredients(){
+        return this.ingredientsList;
     }
 
 }

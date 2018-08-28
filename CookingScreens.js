@@ -6,7 +6,7 @@ module.exports = {
         }
         //Ingredient Menu
         if (screen == 1) {
-            console.log("Select your ingredients:");
+            console.log("\nSelect your ingredients:");
         }
         //Matches Menu
         if (screen == 2) {
