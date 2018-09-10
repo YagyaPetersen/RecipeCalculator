@@ -11,13 +11,12 @@ class State {
     getCurrentScreen() {
         return this.currentScreen;
     }
-    addIngredients(recipes){
+    addIngredients(recipes) {
         this.allIngredients.push(recipes);
     }
-    getIngredients(){
+    getIngredients() {
         return this.allIngredients;
     }
 
 }
-
 module.exports = State;

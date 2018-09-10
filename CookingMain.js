@@ -1,6 +1,6 @@
 var State = require('./CookingState.js');
 var screen = require('./CookingScreens.js');
-var utility = require('./IngredientsUtility.js');
+var Utility = require('./IngredientsUtility.js');
 var stdin = process.openStdin();
 
 var Screens = {
@@ -9,34 +9,50 @@ var Screens = {
     matches_menu: 2
 };
 
+//Initializing state
 var state = new State();
 state.initialize(Screens.main_menu);
+
+//Importing Utility
+var package = state.allIngredients;
+var utility = new Utility();
+utility.globalIngredients(package);
+state.allIngredients = utility.globalIngredients();
 
 console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~");
 console.log("\x1b[33m", "Welcome to your app, Chef");
 console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~", "\x1b[37m");
 
 screen.displayMenuForScreen(state.getCurrentScreen());
+
 //Looper
 stdin.addListener("data", function (a) {
     if (state.getCurrentScreen() == Screens.main_menu) {
+
+
         if (a == 1 || a == '1') {
             console.log("Your current ingredients are...");
-            //for (var i = 0; i < allIngredients.length; ++i) {
-            //console.log('[' + i + ']' + allIngredients[i]);
-            // }
-
-            state.setCurrentScreen(Screens.ingredients_menu)
+            for (var i = 0; i < state.allIngredients.length; ++i) {
+                console.log('[' + i + '] ' + state.allIngredients[i]);
+            }
+            state.setCurrentScreen(Screens.ingredients_menu);
         }
 
         else if (a == 2 || a == '2') {
             state.setCurrentScreen(Screens.matches_menu);
         }
         else if (a == 3 || a == '3') {
-            console.log("Resetting Ingredients.....\n\n");
+            console.log("ResettingIngredients.....\n\n");
             state.setCurrentScreen(Screens.main_menu);
         }
         else if (a == 4 || a == '4') {
+            for (var i = 0; i < state.getIngredients().length; i++) {
+                var currentIngredient = state.getIngredients()[i];
+                var ingredientName = currentIngredient;
+                console.log(ingredientName);
+            }
+        }
+        else if (a == 5 || a == '5') {
             console.log("Arrivederci Chef");
             process.exit(0);
         }
@@ -46,21 +62,26 @@ stdin.addListener("data", function (a) {
     }
 
     //Select Ingredients
-     if (state.getCurrentScreen() == Screens.ingredients_menu) {
+    if (state.getCurrentScreen() == Screens.ingredients_menu) {
         var ingredientNumber = parseInt(a);
-            if (isNaN(a)) {
-                console.log("Please enter a number");
-            } else if (a.toString().trim() < 0 || a.toString().trim() > state.getIngredients().length) {
-                console.log("The number you have entered is not in the list");
-                state.setCurrentScreen(Screens.ingredients_menu);
-                //ingredient = state.allIngredients()[ingredientNumber];
-            }
+
+        if (isNaN(a)) {
+            console.log("Please enter a number");
+
+        } else if (a.toString().trim() < 0 || a.toString().trim() > state.getIngredients().length) {
+            console.log("The number you have entered is not in the list");
+            state.setCurrentScreen(Screens.ingredients_menu);
         }
-            else if (a == 00 || a == '00') {
-                console.log("Going back.....\n");
-                state.setCurrentScreen(Screens.main_menu)
-            }
+        console.log("You have chosen: " + utility.ingredientsExport);
+        state.setCurrentScreen(Screens.ingredients_menu);
+        utility = state.getIngredients()[ingredientNumber];
     
+        if (a == 00 || a == '00') {
+            console.log("Going back.....\n");
+            state.setCurrentScreen(Screens.main_menu)
+        }
+    }
+
 
     //Matching Ingredients with recipes
     else if (state.getCurrentScreen() == Screens.matches_menu) {
@@ -77,4 +98,4 @@ stdin.addListener("data", function (a) {
 });
 
 module.exports = State;
-module.exports = utility;
+module.exports = Utility;
