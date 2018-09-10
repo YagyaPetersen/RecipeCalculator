@@ -2,11 +2,11 @@ module.exports = {
     displayMenuForScreen(screen) {
         //Main Menu
         if (screen == 0) {
-            console.log("\nWould you like to...\n1. Choose Ingredients\n2. Search for Recipe Matches\n3. Reset Ingredients\n4. Show all selected ingredients\n5. Exit");
+            console.log("\nWould you like to...\n1. Choose Ingredients\n2. Search for Recipe Matches\n3. Reset Ingredients\n4. Exit");
         }
         //Ingredient Menu
         if (screen == 1) {
-            console.log("\nSelect your ingredients or enter [00] to stop selecting :");
+            console.log("\nSelect your ingredients or enter [-1] to stop selecting :");
         }
         //Matches Menu
         if (screen == 2) {

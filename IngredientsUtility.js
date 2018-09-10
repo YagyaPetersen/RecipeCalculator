@@ -1,4 +1,4 @@
-class Utility {
+class IUtility {
     globalIngredients(ingredientsExport) {
         this.ingredientsExport = ingredientsExport;
         var fs = require('fs');
@@ -34,4 +34,4 @@ class Utility {
         return allIngredients;
     };
 };
-module.exports = Utility;
+module.exports = IUtility;

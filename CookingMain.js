@@ -1,6 +1,7 @@
 var State = require('./CookingState.js');
 var screen = require('./CookingScreens.js');
-var Utility = require('./IngredientsUtility.js');
+var IUtility = require('./IngredientsUtility.js');
+var MUtility = require('./MatchesUtility.js');
 var stdin = process.openStdin();
 
 var Screens = {
@@ -13,11 +14,17 @@ var Screens = {
 var state = new State();
 state.initialize(Screens.main_menu);
 
-//Importing Utility
-var package = state.allIngredients;
-var utility = new Utility();
-utility.globalIngredients(package);
-state.allIngredients = utility.globalIngredients();
+//Importing Ingredients Utility
+var ingredientsPackage = state.allIngredients;
+var ingredientUtility = new IUtility();
+ingredientUtility.globalIngredients(ingredientsPackage);
+state.allIngredients = ingredientUtility.globalIngredients();
+
+//Importing Matching Utility
+var matchesPackage = state.allMatches;
+var matchesUtility = new MUtility();
+matchesUtility.matchList(matchesPackage);
+state.allMatches = matchesUtility.matchList();
 
 console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~");
 console.log("\x1b[33m", "Welcome to your app, Chef");
@@ -42,17 +49,10 @@ stdin.addListener("data", function (a) {
             state.setCurrentScreen(Screens.matches_menu);
         }
         else if (a == 3 || a == '3') {
-            console.log("ResettingIngredients.....\n\n");
+            console.log("Resetting Ingredients.....\n\n");
             state.setCurrentScreen(Screens.main_menu);
         }
         else if (a == 4 || a == '4') {
-            for (var i = 0; i < state.getIngredients().length; i++) {
-                var currentIngredient = state.getIngredients()[i];
-                var ingredientName = currentIngredient;
-                console.log(ingredientName);
-            }
-        }
-        else if (a == 5 || a == '5') {
             console.log("Arrivederci Chef");
             process.exit(0);
         }
@@ -72,16 +72,16 @@ stdin.addListener("data", function (a) {
             console.log("The number you have entered is not in the list");
             state.setCurrentScreen(Screens.ingredients_menu);
         }
-        console.log("You have chosen: " + utility.ingredientsExport);
+        console.log("You have chosen: " + ingredientUtility);
         state.setCurrentScreen(Screens.ingredients_menu);
-        utility = state.getIngredients()[ingredientNumber];
-    
-        if (a == 00 || a == '00') {
+        ingredientUtility = state.getIngredients()[ingredientNumber];
+
+
+        if (a == -1 || a == '-1') {
             console.log("Going back.....\n");
             state.setCurrentScreen(Screens.main_menu)
         }
     }
-
 
     //Matching Ingredients with recipes
     else if (state.getCurrentScreen() == Screens.matches_menu) {
@@ -98,4 +98,5 @@ stdin.addListener("data", function (a) {
 });
 
 module.exports = State;
-module.exports = Utility;
+module.exports = IUtility;
+module.exports = MUtility;

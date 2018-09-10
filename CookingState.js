@@ -2,6 +2,7 @@ class State {
 
     initialize(screen) {
         this.currentScreen = screen;
+        this.allMatches = {};
         this.allIngredients = [];
     }
 
