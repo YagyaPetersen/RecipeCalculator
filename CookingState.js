@@ -2,8 +2,9 @@ class State {
 
     initialize(screen) {
         this.currentScreen = screen;
-        this.allMatches = {};
+        this.allMatches = [];
         this.allIngredients = [];
+        this.storedIngredients = [];
     }
 
     setCurrentScreen(screen) {
@@ -12,8 +13,9 @@ class State {
     getCurrentScreen() {
         return this.currentScreen;
     }
-    addIngredients(recipes) {
-        this.allIngredients.push(recipes);
+    addIngredients(bilbobaggins) {
+        this.storedIngredients.push(bilbobaggins);
+        return this.storedIngredients
     }
     getIngredients() {
         return this.allIngredients;

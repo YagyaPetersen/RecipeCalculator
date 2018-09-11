@@ -7,7 +7,8 @@ var stdin = process.openStdin();
 var Screens = {
     main_menu: 0,
     ingredients_menu: 1,
-    matches_menu: 2
+    matches_menu: 2,
+    reset_menu: 3,
 };
 
 //Initializing state
@@ -31,26 +32,23 @@ console.log("\x1b[33m", "Welcome to your app, Chef");
 console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~", "\x1b[37m");
 
 screen.displayMenuForScreen(state.getCurrentScreen());
-
 //Looper
 stdin.addListener("data", function (a) {
     if (state.getCurrentScreen() == Screens.main_menu) {
-
-
         if (a == 1 || a == '1') {
-            console.log("Your current ingredients are...");
+            console.log("\nYour current ingredients are...");
             for (var i = 0; i < state.allIngredients.length; ++i) {
                 console.log('[' + i + '] ' + state.allIngredients[i]);
             }
-            state.setCurrentScreen(Screens.ingredients_menu);
+            state.setCurrentScreen(Screens.ingredients_menu)
         }
 
         else if (a == 2 || a == '2') {
             state.setCurrentScreen(Screens.matches_menu);
         }
         else if (a == 3 || a == '3') {
-            console.log("Resetting Ingredients.....\n\n");
-            state.setCurrentScreen(Screens.main_menu);
+            state.setCurrentScreen(Screens.reset_menu);
+            console.log("\nResetting Ingredients.....\n");
         }
         else if (a == 4 || a == '4') {
             console.log("Arrivederci Chef");
@@ -58,24 +56,22 @@ stdin.addListener("data", function (a) {
         }
         else
             console.log("Please select an option from the menu\n\n");
-
     }
 
     //Select Ingredients
     if (state.getCurrentScreen() == Screens.ingredients_menu) {
         var ingredientNumber = parseInt(a);
-
         if (isNaN(a)) {
             console.log("Please enter a number");
-
         } else if (a.toString().trim() < 0 || a.toString().trim() > state.getIngredients().length) {
             console.log("The number you have entered is not in the list");
             state.setCurrentScreen(Screens.ingredients_menu);
         }
-        console.log("You have chosen: " + ingredientUtility);
+
         state.setCurrentScreen(Screens.ingredients_menu);
         ingredientUtility = state.getIngredients()[ingredientNumber];
-
+        var storedAway = state.addIngredients(ingredientUtility);
+        console.log('\x1b[33m', "\nYour chosen ingredients are: ", '\x1b[37m' + storedAway);
 
         if (a == -1 || a == '-1') {
             console.log("Going back.....\n");
@@ -84,15 +80,21 @@ stdin.addListener("data", function (a) {
     }
 
     //Matching Ingredients with recipes
-    else if (state.getCurrentScreen() == Screens.matches_menu) {
-
+    if (state.getCurrentScreen() == Screens.matches_menu) {
+        console.log("------------------------")
+         if (storedAway == 'Cheese', 'Dough', 'Tomato', 'Pepperoni') {
+            console.log(state.allMatches[0]);
+        }
+        if (a == -1 || a == '-1') {
+            console.log("Going back.....\n");
+            state.setCurrentScreen(Screens.main_menu)
+        }
     }
     //Reset Ingredients
     else if (state.getCurrentScreen() == Screens.reset_menu) {
-
+        state.storedIngredients = []
+        state.setCurrentScreen(Screens.main_menu);
     }
-
-
 
     screen.displayMenuForScreen(state.getCurrentScreen());
 });
