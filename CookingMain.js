@@ -9,6 +9,7 @@ var Screens = {
     ingredients_menu: 1,
     matches_menu: 2,
     reset_menu: 3,
+    ingredients_menu2: 4
 };
 
 //Initializing state
@@ -27,13 +28,14 @@ var matchesUtility = new MUtility();
 matchesUtility.matchList(matchesPackage);
 state.allMatches = matchesUtility.matchList();
 
-console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~");
-console.log("\x1b[33m", "Welcome to your app, Chef");
-console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~", "\x1b[37m");
+console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~  ");
+console.log("\x1b[33m", "Welcome to your app, Chef  ");
+console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~  \x1b[0m");
 
 screen.displayMenuForScreen(state.getCurrentScreen());
 //Looper
 stdin.addListener("data", function (a) {
+
     if (state.getCurrentScreen() == Screens.main_menu) {
         if (a == 1 || a == '1') {
             console.log("\nYour current ingredients are...");
@@ -51,7 +53,7 @@ stdin.addListener("data", function (a) {
             console.log("\nResetting Ingredients.....\n");
         }
         else if (a == 4 || a == '4') {
-            console.log("Arrivederci Chef");
+            console.log('\x1b[33m', "Arrivederci Chef", '\x1b[0m');
             process.exit(0);
         }
         else
@@ -59,7 +61,7 @@ stdin.addListener("data", function (a) {
     }
 
     //Select Ingredients
-    if (state.getCurrentScreen() == Screens.ingredients_menu) {
+    else if (state.getCurrentScreen() == Screens.ingredients_menu) {
         var ingredientNumber = parseInt(a);
         if (isNaN(a)) {
             console.log("Please enter a number");
@@ -68,26 +70,57 @@ stdin.addListener("data", function (a) {
             state.setCurrentScreen(Screens.ingredients_menu);
         }
 
-        state.setCurrentScreen(Screens.ingredients_menu);
         ingredientUtility = state.getIngredients()[ingredientNumber];
         var storedAway = state.addIngredients(ingredientUtility);
-        console.log('\x1b[33m', "\nYour chosen ingredients are: ", '\x1b[37m' + storedAway);
+        // function remove_stored_duplicates(storedAway) {
+        //     var obj2 = {};
+        //     var return_array2 = [];
 
+        //     for (var i = 0; i < storedAway.length; i++) {
+        //         obj2[state.storedIngredients[i]] = true;
+        //     }
+        //     for (var key in obj2) {
+        //         return_array2.push(key);
+        //     }
+        //     return return_array2;
+        // }
+        // storedAway = remove_stored_duplicates(storedAway);
+
+
+        console.log('\x1b[33m', "\nYour chosen ingredients are: ", '\x1b[37m' + storedAway);
         if (a == -1 || a == '-1') {
             console.log("Going back.....\n");
             state.setCurrentScreen(Screens.main_menu)
         }
     }
-
     //Matching Ingredients with recipes
-    if (state.getCurrentScreen() == Screens.matches_menu) {
+    else if (state.getCurrentScreen() == Screens.matches_menu) {
+        //console.log(state.storedIngredients);
+
         console.log("------------------------")
-         if (storedAway == 'Cheese', 'Dough', 'Tomato', 'Pepperoni') {
+        if (state.storedIngredients == 'Cheese' && 'Dough' && 'Tomato' && 'Pepperoni') {
             console.log(state.allMatches[0]);
         }
+        else if (storedAway == 'Beef Patty' && 'Tomato' && 'Buns' && 'Lettuce' && 'Cheese') {
+            console.log(state.allMatches[1]);
+        }
+        else if (storedAway == 'Potato' && 'Oil' && 'Cheese') {
+            console.log(state.allMatches[2]);
+        }
+        else if (storedAway == 'Blueberry Filling' && 'Pastry') {
+            console.log(state.allMatches[3]);
+        }
+        else if (storedAway == 'Eggs' && 'Flour' && 'Butter' && 'Milk') {
+            console.log(state.allMatches[4]);
+        }
+        state.setCurrentScreen(Screens.matches_menu)
         if (a == -1 || a == '-1') {
             console.log("Going back.....\n");
             state.setCurrentScreen(Screens.main_menu)
+        }
+        else if(a != -1){
+            console.log("Only [-1] can be entered in this menu");
+            state.setCurrentScreen(Screens.matches_menu);
         }
     }
     //Reset Ingredients
