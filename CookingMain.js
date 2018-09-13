@@ -33,10 +33,11 @@ console.log("\x1b[33m", "Welcome to your app, Chef  ");
 console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~  \x1b[0m");
 
 screen.displayMenuForScreen(state.getCurrentScreen());
+
 //Looper
 stdin.addListener("data", function (a) {
-
     if (state.getCurrentScreen() == Screens.main_menu) {
+
         if (a == 1 || a == '1') {
             console.log("\nYour current ingredients are...");
             for (var i = 0; i < state.allIngredients.length; ++i) {
@@ -65,64 +66,62 @@ stdin.addListener("data", function (a) {
         var ingredientNumber = parseInt(a);
         if (isNaN(a)) {
             console.log("Please enter a number");
-        } else if (a.toString().trim() < 0 || a.toString().trim() > state.getIngredients().length) {
+        } else if (a.toString().trim() < -1 || a.toString().trim() > state.getIngredients().length) {
             console.log("The number you have entered is not in the list");
             state.setCurrentScreen(Screens.ingredients_menu);
         }
-
         ingredientUtility = state.getIngredients()[ingredientNumber];
         var storedAway = state.addIngredients(ingredientUtility);
-        // function remove_stored_duplicates(storedAway) {
-        //     var obj2 = {};
-        //     var return_array2 = [];
+        function remove_stored_duplicates(storedAway) {
+            var obj2 = {};
+            var return_array2 = [];
 
-        //     for (var i = 0; i < storedAway.length; i++) {
-        //         obj2[state.storedIngredients[i]] = true;
-        //     }
-        //     for (var key in obj2) {
-        //         return_array2.push(key);
-        //     }
-        //     return return_array2;
-        // }
-        // storedAway = remove_stored_duplicates(storedAway);
+            for (var i = 0; i < storedAway.length; i++) {
+                obj2[storedAway[i]] = true;
+            }
+            for (var key in obj2) {
+                return_array2.push(key);
+            }
+            return return_array2 + console.log('\x1b[33m', "\nYour chosen ingredients are: ", '\x1b[37m' + storedAway);
+        }
 
+        storedAway = remove_stored_duplicates(storedAway);
 
-        console.log('\x1b[33m', "\nYour chosen ingredients are: ", '\x1b[37m' + storedAway);
         if (a == -1 || a == '-1') {
             console.log("Going back.....\n");
             state.setCurrentScreen(Screens.main_menu)
         }
     }
-    //Matching Ingredients with recipes
-    else if (state.getCurrentScreen() == Screens.matches_menu) {
-        //console.log(state.storedIngredients);
 
-        console.log("------------------------")
-        if (state.storedIngredients == 'Cheese' && 'Dough' && 'Tomato' && 'Pepperoni') {
+    //Matching Ingredients with recipes
+    if (state.getCurrentScreen() == Screens.matches_menu) {
+        var storedAway = state.storedIngredients;
+        console.log("Only [-1] can be entered in this menu");
+       
+        console.log("------------------------");
+        if (storedAway.includes('Cheese', 'Dough', 'Tomato', 'Pepperoni')) {
             console.log(state.allMatches[0]);
         }
-        else if (storedAway == 'Beef Patty' && 'Tomato' && 'Buns' && 'Lettuce' && 'Cheese') {
+        if (storedAway.includes('Beef Patty', 'Tomato', 'Buns', 'Lettuce')) {
             console.log(state.allMatches[1]);
         }
-        else if (storedAway == 'Potato' && 'Oil' && 'Cheese') {
+        if (storedAway.includes('Potato', 'Oil', 'Cheese')) {
             console.log(state.allMatches[2]);
         }
-        else if (storedAway == 'Blueberry Filling' && 'Pastry') {
+        if (storedAway.includes('Blueberry Filling', 'Pastry')) {
             console.log(state.allMatches[3]);
         }
-        else if (storedAway == 'Eggs' && 'Flour' && 'Butter' && 'Milk') {
+        if (storedAway.includes('Eggs', 'Flour', 'Butter', 'Milk')) {
             console.log(state.allMatches[4]);
         }
-        state.setCurrentScreen(Screens.matches_menu)
+        //state.setCurrentScreen(Screens.matches_menu)
+
         if (a == -1 || a == '-1') {
             console.log("Going back.....\n");
             state.setCurrentScreen(Screens.main_menu)
         }
-        else if(a != -1){
-            console.log("Only [-1] can be entered in this menu");
-            state.setCurrentScreen(Screens.matches_menu);
-        }
     }
+
     //Reset Ingredients
     else if (state.getCurrentScreen() == Screens.reset_menu) {
         state.storedIngredients = []
