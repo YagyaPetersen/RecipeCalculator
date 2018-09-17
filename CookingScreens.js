@@ -10,7 +10,7 @@ module.exports = {
         }
         //Matches Menu
         if (screen == 2) {
-            console.log("\n^^^^^^^^^^^^^^^^^^^^^^^^\n")
+            console.log("^^^^^^^^^^^^^^^^^^^^^^^^")
             console.log("These are the recipes you could make\nPress [-1] to go back");
         }
     }

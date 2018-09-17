@@ -3,6 +3,11 @@ var screen = require('./CookingScreens.js');
 var IUtility = require('./IngredientsUtility.js');
 var MUtility = require('./MatchesUtility.js');
 var stdin = process.openStdin();
+var fs = require('fs');
+var data = fs.readFileSync('Recipes.json', 'utf-8');
+var json = JSON.parse(data);
+var recipeList = json;
+
 
 var Screens = {
     main_menu: 0,
@@ -37,7 +42,6 @@ screen.displayMenuForScreen(state.getCurrentScreen());
 //Looper
 stdin.addListener("data", function (a) {
     if (state.getCurrentScreen() == Screens.main_menu) {
-
         if (a == 1 || a == '1') {
             console.log("\nYour current ingredients are...");
             for (var i = 0; i < state.allIngredients.length; ++i) {
@@ -45,7 +49,6 @@ stdin.addListener("data", function (a) {
             }
             state.setCurrentScreen(Screens.ingredients_menu)
         }
-
         else if (a == 2 || a == '2') {
             state.setCurrentScreen(Screens.matches_menu);
         }
@@ -91,35 +94,26 @@ stdin.addListener("data", function (a) {
             console.log("Going back.....\n");
             state.setCurrentScreen(Screens.main_menu)
         }
+
     }
 
     //Matching Ingredients with recipes
     if (state.getCurrentScreen() == Screens.matches_menu) {
         var storedAway = state.storedIngredients;
         console.log("Only [-1] can be entered in this menu");
-       
         console.log("------------------------");
-        if (storedAway.includes('Cheese', 'Dough', 'Tomato', 'Pepperoni')) {
-            console.log(state.allMatches[0]);
-        }
-        if (storedAway.includes('Beef Patty', 'Tomato', 'Buns', 'Lettuce')) {
-            console.log(state.allMatches[1]);
-        }
-        if (storedAway.includes('Potato', 'Oil', 'Cheese')) {
-            console.log(state.allMatches[2]);
-        }
-        if (storedAway.includes('Blueberry Filling', 'Pastry')) {
-            console.log(state.allMatches[3]);
-        }
-        if (storedAway.includes('Eggs', 'Flour', 'Butter', 'Milk')) {
-            console.log(state.allMatches[4]);
-        }
-        //state.setCurrentScreen(Screens.matches_menu)
 
-        if (a == -1 || a == '-1') {
-            console.log("Going back.....\n");
-            state.setCurrentScreen(Screens.main_menu)
-        }
+        let result = recipeList.reduce((returner, element) => {
+            let ingredients = element.ingredients;
+            if (storedAway.includes(...ingredients)) returner.push(element.name);
+            return returner;
+        }, [])
+        console.log(result.toString());
+    }
+
+    if (a == -1 || a == '-1') {
+        console.log("Going back.....\n");
+        state.setCurrentScreen(Screens.main_menu)
     }
 
     //Reset Ingredients
