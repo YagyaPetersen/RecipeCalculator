@@ -85,7 +85,7 @@ stdin.addListener("data", function (a) {
             for (var key in obj2) {
                 return_array2.push(key);
             }
-            return return_array2 + console.log('\x1b[33m', "\nYour chosen ingredients are: ", '\x1b[37m' + storedAway);
+            return return_array2 + console.log("\n\x1b[33mYour chosen ingredients are: \x1b[37m" + storedAway);
         }
 
         storedAway = remove_stored_duplicates(storedAway);
@@ -100,7 +100,8 @@ stdin.addListener("data", function (a) {
     //Matching Ingredients with recipes
     if (state.getCurrentScreen() == Screens.matches_menu) {
         var storedAway = state.storedIngredients;
-        console.log("Only [-1] can be entered in this menu");
+        console.log("\nOnly [-1] can be entered in this menu");
+        console.log("\x1b[33mYour chosen ingredients are: \x1b[37m" + storedAway);
         console.log("------------------------");
 
         let result = recipeList.reduce((returner, element) => {
@@ -109,11 +110,11 @@ stdin.addListener("data", function (a) {
             return returner;
         }, [])
         console.log(result.toString());
-    }
 
-    if (a == -1 || a == '-1') {
-        console.log("Going back.....\n");
-        state.setCurrentScreen(Screens.main_menu)
+        if (a == -1 || a == '-1') {
+            console.log("Going back.....\n");
+            state.setCurrentScreen(Screens.main_menu)
+        }
     }
 
     //Reset Ingredients
