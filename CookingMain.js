@@ -1,7 +1,6 @@
 var State = require('./CookingState.js');
 var screen = require('./CookingScreens.js');
 var IUtility = require('./IngredientsUtility.js');
-var MUtility = require('./MatchesUtility.js');
 var stdin = process.openStdin();
 var fs = require('fs');
 var data = fs.readFileSync('Recipes.json', 'utf-8');
@@ -26,12 +25,6 @@ var ingredientsPackage = state.allIngredients;
 var ingredientUtility = new IUtility();
 ingredientUtility.globalIngredients(ingredientsPackage);
 state.allIngredients = ingredientUtility.globalIngredients();
-
-//Importing Matching Utility
-var matchesPackage = state.allMatches;
-var matchesUtility = new MUtility();
-matchesUtility.matchList(matchesPackage);
-state.allMatches = matchesUtility.matchList();
 
 console.log("\x1b[33m", "~~~~~~~~~~~~~~~~~~~~~~~~~  ");
 console.log("\x1b[33m", "Welcome to your app, Chef  ");
@@ -96,20 +89,15 @@ stdin.addListener("data", function (a) {
         }
 
     }
-
     //Matching Ingredients with recipes
     if (state.getCurrentScreen() == Screens.matches_menu) {
         var storedAway = state.storedIngredients;
         console.log("\nOnly [-1] can be entered in this menu");
-        console.log("\x1b[33mYour chosen ingredients are: \x1b[37m" + storedAway);
+        console.log("\x1b[33mCurrent Ingredients: \x1b[37m" + storedAway);
         console.log("------------------------");
 
-        let result = recipeList.reduce((returner, element) => {
-            let ingredients = element.ingredients;
-            if (storedAway.includes(...ingredients)) returner.push(element.name);
-            return returner;
-        }, [])
-        console.log(result.toString());
+        var match = recipeList.filter(x => x.ingredients.every(e => storedAway.some(s => s === e)));
+        console.log('\x1b[33m',match,'\x1b[0m');
 
         if (a == -1 || a == '-1') {
             console.log("Going back.....\n");
@@ -128,4 +116,3 @@ stdin.addListener("data", function (a) {
 
 module.exports = State;
 module.exports = IUtility;
-module.exports = MUtility;
